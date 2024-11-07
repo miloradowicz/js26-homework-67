@@ -19,13 +19,21 @@ export const combinationLockSlice = createSlice({
   initialState,
   reducers: {
     addCharacter: (state, action: PayloadAction<string>) => {
-      state.currentInput += action.payload;
-      state.text = '*'.repeat(state.currentInput.length);
+      if (state.currentInput.length < 4) {
+        state.currentInput += action.payload;
+        state.text = '*'.repeat(state.currentInput.length);
+      }
     },
     deleteLastCharacter: (state) => {
-      state.currentInput = state.currentInput.slice(0, -1);
-      state.text = '*'.repeat(state.currentInput.length);
-      state.displayStatus = 'default';
+      if (state.currentInput.length > 0) {
+        if (state.displayStatus === 'default') {
+          state.currentInput = state.currentInput.slice(0, -1);
+        } else {
+          state.currentInput = '';
+          state.displayStatus = 'default';
+        }
+        state.text = '*'.repeat(state.currentInput.length);
+      }
     },
     enterCombination: (state) => {
       if (state.combination === state.currentInput) {
